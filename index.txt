@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #form:nth-child() {
+            margin-right: 2px;
+        }
+
+        table, th, tr, td {
+            border: 1px solid black;
+        }
+       
+    </style>
+</head>
+<body>
+    <form id="form">
+        <input type="text" placeholder="Имя" required>
+        <input type="text" placeholder="Фамилия" required>
+        <input type="number" placeholder="Возраст" required>
+        <input type="number" placeholder="Средний бал" required>
+        <input type="submit" value="Add">
+    </form>
+    <table id="table">
+        <thead>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Возраст</th>
+            <th>Средний бал</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div class="avg-mark">
+        <span>Средний бал: </span>
+    </div>
+    <script>
+        const items = [];
+
+        submit();
+
+        function submit(){
+            const form = document.querySelector('#form');
+
+            form.addEventListener('submit', submitHandler);
+        }
+
+        function avgMark(){
+            const span = document.querySelector('span');
+            const avgTd = [...document.querySelectorAll('#table tbody tr')];
+            let avg = 0;
+
+            console.dir(avgTd);
+
+            avgTd.forEach((e) => {
+                avg += Number(e.children[3].innerText);
+                
+            });
+
+            span.innerText = `Средний бал: ${avg / avgTd.length}`;
+        }
+
+        function submitHandler(event){
+            event.preventDefault();
+            
+            const newItem = {};
+            const inputs = [...event.target].filter(e => e.getAttribute('type') !== 'submit');
+
+            inputs.forEach(e => {
+                newItem[e.getAttribute('placeholder')] = e.value;
+                e.value = '';
+            });
+
+            items.push(newItem);
+            addToTable(newItem);
+        }
+
+        function addToTable(newItem){
+            const tbody = document.querySelector('#table tbody');
+            const tr = document.createElement('tr');
+
+            for (const key in newItem) {
+                const td = document.createElement('td');
+
+                td.innerText = newItem[key];
+                tr.append(td);
+            }
+            
+            tbody.append(tr);
+            avgMark();
+        }
+    </script>
+</body>
+</html>
